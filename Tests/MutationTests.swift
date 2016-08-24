@@ -21,7 +21,7 @@ class MutationTests: XCTestCase {
     let output = "mutation  {()}"
     let mutation = Mutation(mutatingRequest: MutatingRequest(
       mutationName: "",
-      mutatingArgument: MutatingArgument(key: "", mutatingValue: ""),
+      mutatingArgument: [MutatingArgument(key: "", mutatingValue: "")],
       responseFields: []
       )
     )
@@ -32,7 +32,7 @@ class MutationTests: XCTestCase {
     let output = "mutation  {(name: \"joe\"){name}}"
     let mutation = Mutation(mutatingRequest: MutatingRequest(
       mutationName: "",
-      mutatingArgument: MutatingArgument(key: "name", mutatingValue: "joe"),
+      mutatingArgument: [MutatingArgument(key: "name", mutatingValue: "joe")],
       responseFields: [
         "name"
       ]
@@ -45,7 +45,7 @@ class MutationTests: XCTestCase {
     let output = "mutation  {mutate(){name}}"
     let mutation = Mutation(mutatingRequest: MutatingRequest(
       mutationName: "mutate",
-      mutatingArgument: MutatingArgument(key: "", mutatingValue: ""),
+      mutatingArgument: [MutatingArgument(key: "", mutatingValue: "")],
       responseFields: [
         "name"
       ]
@@ -58,19 +58,38 @@ class MutationTests: XCTestCase {
     let output = "mutation  {mutate(name: \"joe\")}"
     let mutation = Mutation(mutatingRequest: MutatingRequest(
       mutationName: "mutate",
-      mutatingArgument: MutatingArgument(key: "name", mutatingValue: "joe"),
+      mutatingArgument: [MutatingArgument(key: "name", mutatingValue: "joe")],
       responseFields: []
       )
     )
     XCTAssertEqual(mutation.create(), output, "Output doesn't match request")
   }
   
+  func testMutationSpecExampleWithMulitpleVariableDeclarations() {
+    let output = "mutation  {likeStory(name: \"Anne Frank\",storyID: 12345){story{likeCount}}}"
+    let mutation = Mutation(mutatingRequest: MutatingRequest(
+      mutationName: "likeStory",
+      mutatingArgument: [MutatingArgument(key: "name", mutatingValue: "Anne Frank"), MutatingArgument(key: "storyID", mutatingValue: 12345)],
+      responseFields: [
+        ReadingRequest(
+          name: "story",
+          arguments: [],
+          fields: [
+            "likeCount"
+          ]
+        )
+      ]
+      )
+     )
+     XCTAssertEqual(mutation.create(), output, "Output doesn't match request")
+  }
+
   func testMutationWithAlias() {
     let output = "mutation  {test:mutate(name: \"joe\"){name}}"
     let mutation = Mutation(mutatingRequest: MutatingRequest(
       withAlias: "test",
       mutationName: "mutate",
-      mutatingArgument: MutatingArgument(key: "name", mutatingValue: "joe"),
+      mutatingArgument: [MutatingArgument(key: "name", mutatingValue: "joe")],
       responseFields: [
         "name"
       ]
@@ -84,7 +103,7 @@ class MutationTests: XCTestCase {
     let mutation = Mutation(mutatingRequest: MutatingRequest(
       withAlias: "alias",
       mutationName: "test",
-      mutatingArgument: MutatingArgument(
+      mutatingArgument: [MutatingArgument(
         key: "input",
         mutatingValue: MutatingValue(
           withFields: [
@@ -92,7 +111,7 @@ class MutationTests: XCTestCase {
             MutatingField(name: "age", value: 99)
           ]
         )
-      ),
+      )],
       responseFields: [
         "name",
         ReadingRequest(

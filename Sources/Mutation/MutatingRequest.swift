@@ -12,10 +12,10 @@ public struct MutatingRequest: Request {
   public let arguments: [GraphQLConvertible]
   public let fields: [Field]
   
-  public init(withAlias alias: String = "", mutationName name: String, mutatingArgument argument: MutatingArgument, responseFields fields: [Field]) {
+  public init(withAlias alias: String = "", mutationName name: String, mutatingArgument argument: [GraphQLConvertible], responseFields fields: [Field]) {
     self.alias = alias
     self.name = name
-    self.arguments = [argument]
+    self.arguments = argument
     self.fields = fields
   }
 }
